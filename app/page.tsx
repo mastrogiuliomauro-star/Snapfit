@@ -254,7 +254,7 @@ export default function Home() {
         triggerPopup("⚡ TDEE e Macro Ricalcolati!");
     };
 
-    // --- TRAKER ALIMENTARE INTERFACCIATO AL SERVER ---
+    // --- TRACKER ALIMENTARE INTERFACCIATO AL SERVER CON PARSING CORAZZATO ---
     const handleTrackFood = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!foodInput.trim()) return;
@@ -269,7 +269,15 @@ export default function Home() {
             });
 
             if (!res.ok) throw new Error("Errore chiamata server");
-            const data: Macro = await res.json();
+            const rawData = await res.json();
+
+            // Forziamo la pulizia dei dati: se arrivano stringhe o undefined, li convertiamo in numeri stabili
+            const data: Macro = {
+                kcal: Math.round(Number(rawData.kcal ?? rawData.Kcal ?? 0)),
+                prot: Math.round(Number(rawData.prot ?? rawData.Prot ?? rawData.pro ?? 0)),
+                carbo: Math.round(Number(rawData.carbo ?? rawData.Carbo ?? rawData.carb ?? 0)),
+                fat: Math.round(Number(rawData.fat ?? rawData.Fat ?? rawData.fats ?? 0))
+            };
 
             const now = new Date().toLocaleTimeString("it-IT", { hour: "2-digit", minute: "2-digit" });
             const newFoodLog: FoodLog = { id: crypto.randomUUID(), time: now, rawText: foodInput, macros: data };
