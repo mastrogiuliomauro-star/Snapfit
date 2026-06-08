@@ -13,7 +13,7 @@ export async function POST(req: Request) {
 
         if (food.includes("array JSON") || food.includes("allenamento") || food.includes("schema")) {
             const response = await ai.models.generateContent({
-                model: "gemini-3.1-flash-lite", // <--- PRIMO PUNTO DA CAMBIARE
+                model: "gemini-3.1-flash-lite",
                 contents: food,
             });
 
@@ -31,7 +31,7 @@ export async function POST(req: Request) {
         const promptDieta = `Sei un nutrizionista sportivo. Analizza questo alimento: "${food}". Rispondi ESCLUSIVAMENTE con un oggetto JSON avente questa struttura esatta, senza formattazione markdown, senza testo extra e senza spiegazioni: {"kcal": 0, "prot": 0, "carbo": 0, "fat": 0} Usa solo numeri interi. Se l'alimento è indefinito, stima al meglio.`;
 
         const response = await ai.models.generateContent({
-            model: "gemini-3.1-flash-lite", // <--- SECONDO PUNTO DA CAMBIARE
+            model: "gemini-3.1-flash-lite",
             contents: promptDieta,
         });
 
